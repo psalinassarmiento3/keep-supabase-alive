@@ -1,4 +1,4 @@
-name: Keep Supabase Projects Alive
+name: Keep Supabase Alive
 
 on:
   schedule:
@@ -8,23 +8,26 @@ on:
 jobs:
   ping:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
+      - uses: actions/checkout@v4
+
       - name: Ping valdiviesopatrimonio.cl
         run: |
-          echo "Pinging valdiviesopatrimonio.cl..."
-          curl -s -o /dev/null -w "HTTP %{http_code}\n" https://valdiviesopatrimonio.cl/api/keep-alive
+          echo "=== Pinging central keep-alive ==="
+          curl -s --max-time 30 "https://valdiviesopatrimonio.cl/api/keep-alive"
+          echo ""
 
-      - name: Ping cer-chile.cl
+      - name: Heartbeat to keep repo alive
         run: |
-          echo "Pinging cer-chile.cl..."
-          curl -s -o /dev/null -w "HTTP %{http_code}\n" https://cerchile-produccion.vercel.app/api/cron/keepalive
-
-      - name: Ping demo-abogd.severant.cl
-        run: |
-          echo "Pinging demo-abogd.severant.cl..."
-          curl -s -o /dev/null -w "HTTP %{http_code}\n" https://demo-abogd.vercel.app/api/cron/keepalive
-
-      - name: Ping severant.cl
-        run: |
-          echo "Pinging severant.cl..."
-          curl -s -o /dev/null -w "HTTP %{http_code}\n" https://severant.vercel.app/api/keep-alive
+          echo "$(date -u -Iseconds)" > .heartbeat
+          git config user.name "keep-alive-bot"
+          git config user.email "bot@keepalive.invalid"
+          git add .heartbeat
+          if git diff --cached --quiet; then
+            echo "No changes needed"
+          else
+            git commit -m "auto: heartbeat $(date -u +%Y-%m-%d)"
+            git push
+          fi
