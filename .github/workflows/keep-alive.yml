@@ -1,0 +1,30 @@
+name: Keep Supabase Projects Alive
+
+on:
+  schedule:
+    - cron: "0 6 */3 * *"
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping valdiviesopatrimonio.cl
+        run: |
+          echo "Pinging valdiviesopatrimonio.cl..."
+          curl -s -o /dev/null -w "HTTP %{http_code}\n" https://valdiviesopatrimonio.cl/api/keep-alive
+
+      - name: Ping cer-chile.cl
+        run: |
+          echo "Pinging cer-chile.cl..."
+          curl -s -o /dev/null -w "HTTP %{http_code}\n" https://cerchile-produccion.vercel.app/api/cron/keepalive
+
+      - name: Ping demo-abogd.severant.cl
+        run: |
+          echo "Pinging demo-abogd.severant.cl..."
+          curl -s -o /dev/null -w "HTTP %{http_code}\n" https://demo-abogd.vercel.app/api/cron/keepalive
+
+      - name: Ping severant.cl
+        run: |
+          echo "Pinging severant.cl..."
+          curl -s -o /dev/null -w "HTTP %{http_code}\n" https://severant.vercel.app/api/keep-alive
