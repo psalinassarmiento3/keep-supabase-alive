@@ -12,4 +12,4 @@ jobs:
       - name: Refrescar ml_item_stats
         run: |
           echo "=== Refrescando visitas ML grupocasal ==="
-          curl -sf --max-time 240 "https://grupocasal-eta.vercel.app/api/cron/ml-visits" || echo "FALLO (se reintenta la proxima hora)"
+          curl -sf --max-time 240 "https://grupocasal-eta.vercel.app/api/cron/ml-visits?key=${{ secrets.ML_CRON_KEY }}" || echo "FALLO (se reintenta la proxima hora)"
