@@ -1,0 +1,15 @@
+name: Grupocasal Sync Status (cada hora)
+
+on:
+  schedule:
+    - cron: "37 * * * *"
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sync estado y MLC de propiedades ML
+        run: |
+          echo "=== Sincronizando estado/MLC grupocasal ==="
+          curl -sf --max-time 240 "https://grupocasal-eta.vercel.app/api/mercadolibre/sync-status?key=${{ secrets.ML_CRON_KEY }}" || echo "FALLO (se reintenta la proxima hora)"
