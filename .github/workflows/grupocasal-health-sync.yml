@@ -1,8 +1,8 @@
-name: Grupocasal Health ML (cada 10 min)
+name: Grupocasal Health ML (cada hora)
 
 on:
   schedule:
-    - cron: "*/10 * * * *"
+    - cron: "7 * * * *"
   workflow_dispatch:
 
 jobs:
@@ -12,4 +12,4 @@ jobs:
       - name: Sincronizar salud ML
         run: |
           echo "=== Sincronizando salud ML grupocasal ==="
-          curl -sf --max-time 240 "https://grupocasal-eta.vercel.app/api/mercadolibre/health-sync?key=${{ secrets.ML_CRON_KEY }}" || echo "FALLO (se reintenta en 10 min)"
+          curl -sf --max-time 240 "https://grupocasal-eta.vercel.app/api/mercadolibre/health-sync?key=${{ secrets.ML_CRON_KEY }}" || echo "FALLO (se reintenta en 1 hora)"
