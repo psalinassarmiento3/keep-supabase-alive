@@ -1,0 +1,15 @@
+name: Grupocasal Leads ML (cada 10 min)
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sincronizar leads ML
+        run: |
+          echo "=== Sincronizando leads ML grupocasal ==="
+          curl -sf --max-time 240 "https://grupocasal-eta.vercel.app/api/mercadolibre/leads/sync?key=${{ secrets.ML_CRON_KEY }}" || echo "FALLO (se reintenta en 10 min)"
